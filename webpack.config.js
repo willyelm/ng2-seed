@@ -1,32 +1,31 @@
 var webpack = require('webpack');
 var path = require('path');
-var webpackMerge = require('webpack-merge');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-// Webpack Config
-var webpackConfig = {
+module.exports = {
+  cache: true,
+  // Webpack config
   entry: {
     'main': './src/main.browser.ts',
   },
-
   output: {
     publicPath: '',
     path: path.resolve(__dirname, './dist'),
+    filename: '[name].bundle.js',
+    sourceMapFilename: '[name].map',
+    chunkFilename: '[id].chunk.js'
   },
-
   plugins: [
     new webpack.ContextReplacementPlugin(
-      // The (\\|\/) piece accounts for path separators in *nix and Windows
       /angular(\\|\/)core(\\|\/)src(\\|\/)linker/,
       path.resolve(__dirname, './src'),
       {
         // your Angular Async Route paths relative to this root directory
       }
-    ),
+    )
   ],
-
   module: {
     loaders: [
-      // .ts files for TypeScript
       {
         test: /\.ts$/,
         loaders: [
@@ -35,29 +34,24 @@ var webpackConfig = {
           'angular2-router-loader'
         ]
       },
-      { test: /\.css$/, loaders: ['to-string-loader', 'css-loader'] },
+      {
+        test: /\.css$/,
+        loaders: ['to-string-loader', 'css-loader']
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loaders: ['raw-loader', 'sass-loader']
+      },
       { test: /\.html$/, loader: 'raw-loader' }
     ]
-  }
-
-};
-
-
-// Our Webpack Defaults
-var defaultConfig = {
-  devtool: 'source-map',
-
-  output: {
-    filename: '[name].bundle.js',
-    sourceMapFilename: '[name].map',
-    chunkFilename: '[id].chunk.js'
   },
-
+  // Default Config
+  devtool: 'cheap-module-eval-source-map', //'source-map',
   resolve: {
     extensions: [ '.ts', '.js' ],
     modules: [ path.resolve(__dirname, 'node_modules') ]
   },
-
   devServer: {
     historyApiFallback: true,
     watchOptions: { aggregateTimeout: 300, poll: 1000 },
@@ -67,7 +61,6 @@ var defaultConfig = {
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     }
   },
-
   node: {
     global: true,
     crypto: 'empty',
@@ -79,6 +72,3 @@ var defaultConfig = {
     setImmediate: false
   }
 };
-
-
-module.exports = webpackMerge(defaultConfig, webpackConfig);
