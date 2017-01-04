@@ -26,6 +26,7 @@
     "@angular/upgrade": "~2.2.1",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.16",
     "angular2-in-memory-web-api": "0.0.21",
+    "bootstrap": "^4.0.0-alpha.5",
     "core-js": "^2.4.1",
     "ie-shim": "^0.1.0",
     "node-sass": "^4.1.1",
